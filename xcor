@@ -1,0 +1,159 @@
+mysql> Create Table Emp_Master (
+    ->     Empid Int(20) Primary Key,
+    ->     Ename Varchar(30) Not Null,
+    ->     Eadds Varchar(32) Not Null,
+    ->     Email Varchar(35) Not Null,
+    ->     Phone varchar(11) Not Null );
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+mysql> show tables;
++--------------------+
+| Tables_in_24BCA052 |
++--------------------+
+| Emp_Master         |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> desc Emp_Master;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| Empid | int         | NO   | PRI | NULL    |       |
+| Ename | varchar(30) | NO   |     | NULL    |       |
+| Eadds | varchar(32) | NO   |     | NULL    |       |
+| Email | varchar(35) | NO   |     | NULL    |       |
+| Phone | int         | NO   |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> select * from  Emp_Master;
++-------+-------+-----------+-----------------+-----------+
+| Empid | Ename | Eadds     | Email           | Phone     |
++-------+-------+-----------+-----------------+-----------+
+|  2145 | savio | MANGALORE | savio@gmail.com | 886325414 |
++-------+-------+-----------+-----------------+-----------+
+1 row in set (0.00 sec)
+mysql> INSERT INTO Emp_Master VALUES 
+    -> (2145, 'savio', 'MANGALORE', 'savio@gmail.com', 8863254145);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO Emp_Master VALUES  (2144, 'sdsd', 'MANGALORE', 'sdsd@gmail.com', 8863254145);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO Emp_Master VALUES  (2143, 'sdsd', 'MANGALORE', 'sdsd@gmail.com', 8863254145);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO Emp_Master VALUES  (2142, 'cvcv', 'MANGALORE', 'cvcv@gmail.com', 8863254145);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO Emp_Master VALUES  (2141, 'erer', 'MANGALORE', 'erer@gmail.com', 8863254145);
+Query OK, 1 row affected (0.01 sec)
+mysql> Create Table Attendance (
+    -> Empid Int(5),
+    -> Month Int(3) Check (Month Between 1 And 12),
+    -> Wom   Int(3) Check (Wom<=5),
+    -> Mhrs  Int(3) Not Null,
+    -> Thrs  Int(3) Not Null,
+    -> Whrs  Int(3) Not Null,
+    -> Trhrs Int(3) Not Null,
+    -> Fhrs  Int(3) Not Null,
+    -> Shrs  Int(3) Not Null,
+    -> Suhrs  Int(3) Not Null,
+    -> Foreign Key (Empid) references Emp_Master(Empid) ON DELETE CASCADE);
+Query OK, 0 rows affected, 10 warnings (0.03 sec)
+mysql> insert into Attendance Values (2145, 2, 2, 4, 5, 3, 0, 2, 4, 0);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into Attendance Values (2144, 2, 2, 4, 5, 3, 0, 2, 4, 0);
+Query OK, 1 row affected (0.00 sec)
+mysql> Insert into Attendance Values (2143, 2, 2, 4, 5, 3, 5, 2, 4, 5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Insert into Attendance Values (2142, 2, 2, 4, 5, 3, 5, 5, 4, 5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> Select E.Empid, E.Ename, E.Email
+    ->   
+Display all 812 possibilities? (y or n) 
+    ->   From Emp_Master E, Attendance A
+    -> 
+Display all 812 possibilities? (y or n) 
+    -> Where E.Empid = A.Empid
+    -> 
+Display all 812 possibilities? (y or n) 
+    -> And Wom In (2, 4) And Suhrs >0;
++-------+-------+----------------+
+| Empid | Ename | Email          |
++-------+-------+----------------+
+|  2142 | cvcv  | cvcv@gmail.com |
++-------+-------+----------------+
+1 row in set (0.00 sec)
+mysql> Select Empid, Month, Sum(Mhrs + Thrs + Whrs + Trhrs + Fhrs + Shrs + Suhrs) As Total_Hours From Attendance Group By Empid, Month;
++-------+-------+-------------+
+| Empid | Month | Total_Hours |
++-------+-------+-------------+
+|  2145 |     2 |          18 |
+|  2144 |     2 |          18 |
++-------+-------+-------------+
+2 rows in set (0.00 sec)
+mysql> Select Ename From Emp_Master
+    -> Where EmpId Not In (Select EmpId From Attendance);
++-------+
+| Ename |
++-------+
+| erer  |
+| cvcv  |
+| sdsd  |
++-------+
+3 rows in set (0.01 sec)
+mysql> Select Ename From Emp_Master
+    -> Where EmpId Not In (Select EmpId From Attendance);
++-------+
+| Ename |
++-------+
+| erer  |
++-------+
+1 row in set (0.00 sec)
+mysql> Select E.EName, A.Month, Wom As Week, (Mhrs + Thrs + Whrs + Trhrs + Fhrs + Shrs + Suhrs) As Total_Hours      From Emp_Master E, Attendance A       Where A.Empid = E.Empid And       (Mhrs + Thrs + Whrs
++ Trhrs + Fhrs + Shrs + Suhrs) > 20;
++-------+-------+------+-------------+
+| EName | Month | Week | Total_Hours |
++-------+-------+------+-------------+
+| cvcv  |     2 |    2 |          31 |
+| sdsd  |     2 |    2 |          28 |
++-------+-------+------+-------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
